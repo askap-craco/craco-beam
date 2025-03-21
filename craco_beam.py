@@ -126,8 +126,8 @@ class CracoBeam:
         ypoints = (ypoints - beamy).copy()
 
         ### outside the FoV, make copies...
-        xpoints = (xpoints - self.fov / 2) % self.fov - self.fov / 2
-        ypoints = (ypoints - self.fov / 2) % self.fov - self.fov / 2
+        # xpoints = (xpoints - self.fov / 2) % self.fov - self.fov / 2
+        # ypoints = (ypoints - self.fov / 2) % self.fov - self.fov / 2
 
         xpoints = np.deg2rad(xpoints)
         ypoints = np.deg2rad(ypoints)
@@ -139,7 +139,7 @@ class CracoBeam:
         p1 = sin(pi*self.uvcellsize*xpoints) / (pi*self.uvcellsize*xpoints)
         p2 = sin(pi*self.uvcellsize*ypoints) / (pi*self.uvcellsize*ypoints)
 
-        return p1 * p2
+        return np.abs(p1 * p2)
     
     def sample_response(self, xpoints, ypoints, beamx=0., beamy=0.):
         """
