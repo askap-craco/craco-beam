@@ -191,7 +191,7 @@ def get_craco_allbeams(
         footprint="square", pitch=0.9, freq=920.5, # askap footprint related,
         fov=1.1, npix=256, sbeam=40./3600., # craco related
         gsize=10., gpix=2560, # response gridding params
-        multicore=True, ncpu=8,
+        multicore=True, ncpu=8, prefix="craco",
     ):
         xpoints, ypoints = _make_response_grid(gsize=gsize, gpix=gpix)
         askapbeam = AskapBeam(footprint=footprint, pitch=pitch, freq=freq)
@@ -208,7 +208,7 @@ def get_craco_allbeams(
                 results = pool.starmap(_sim_one_beam, args)
             beamsresponse = np.array(results)
 
-        savefname = f"./craco_{footprint}_p{pitch:.2f}_f{freq:.1f}MHz_f{gsize:.1f}d_npix{gpix}.npy"
+        savefname = f"./{prefix}_{footprint}_p{pitch:.2f}_f{freq:.1f}MHz_f{gsize:.1f}d_npix{gpix}.npy"
         np.save(savefname, beamsresponse)
         logger.info(f"save data to {savefname}...")
 
@@ -225,12 +225,13 @@ if __name__ == "__main__":
     parser.add_argument("-gn", "--gridnpix", help="number of pixel in the grid", type=int, default=2560)
     parser.add_argument("-m", "--multicore", help="multicore processing", action="store_true", default=True)
     parser.add_argument("-ncpu", "--ncpu", help="number of cpus to use", type=int, default=8)
+    parser.add_argument("-pre", "--prefix", help="prefix in the saved numpy file", type=str, default="craco")
     values = parser.parse_args()
 
     get_craco_allbeams(
         footprint=values.footprint, pitch=values.pitch, freq=values.freq,
         fov=values.fov, npix=values.npix, sbeam=values.sbeam, gsize=values.gridsize,
-        gpix=values.gridnpix, multicore=values.multicore, ncpu=values.ncpu
+        gpix=values.gridnpix, multicore=values.multicore, ncpu=values.ncpu, prefix=values.prefix
     )
 
 
